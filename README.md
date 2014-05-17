@@ -1,4 +1,5 @@
 OpenWeatherMapPlugin
 ====================
 
-A global plugin for NVDA which retrieves information from OWM.
+A NVDA add-on containing a global plugin which retrieves information
+from the OpenWeatherMap API.
