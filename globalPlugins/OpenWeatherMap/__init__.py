@@ -17,7 +17,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_announceNVDAVersion(self, gesture):
 		response = urllib2.urlopen("http://api.openweathermap.org/data/2.5/weather?q=Hanford,us")
 		content = response.read()
-		ui.message(content)
+		ui.message(repr(json.loads(content)))
 
 	__gestures={
 		"kb:NVDA+w": "announceNVDAVersion",
