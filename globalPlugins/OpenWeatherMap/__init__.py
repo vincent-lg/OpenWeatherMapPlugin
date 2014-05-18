@@ -26,8 +26,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		client = Client.query("http://api.openweathermap.org/data/2.5/weather", {
 			"q": "Hanford,us",
 		})
-		temperature = client.get_temperature()
-		ui.message("Temperatature: " + str(temperature))
+		if client.error:
+			ui.message("{0} {1}".format(client.statusCode, client.errorReason))
+		else:
+			temperature = client.forecast.getTemperature()
+			ui.message("Temperatature: " + str(temperature))
 
 	__gestures={
 		"kb:NVDA+w": "announceOWMForecast",

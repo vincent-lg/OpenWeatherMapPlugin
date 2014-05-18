@@ -6,9 +6,10 @@
 
 """
 
-import json
 import urllib
 import urllib2
+
+from tinyowm.forecast import Forecast
 
 class Client:
 
@@ -25,6 +26,7 @@ class Client:
 	def __init__(self, url, data):
 		self.url = url
 		self.data = data
+		self.forecast = None
 		self.error = False
 		self.statusCode = 200
 		self.errorReason = None
@@ -52,19 +54,7 @@ class Client:
 		else:
 			content = response.read()
 
-			# Try to parse the response
-			decoded = json.loads(content)
-			client.answer = decoded
+			# Create tthe forecast object
+			client.forecast = Forecast.buildFromJSON(content)
 
 		return client
-
-	def get_temperature(self):
-		"""Get the temperature."""
-		answer = self.answer
-		main = answer.get("main")
-		if main:
-			temp = main.get("temp")
-			if temp:
-				return temp
-
-		return None
