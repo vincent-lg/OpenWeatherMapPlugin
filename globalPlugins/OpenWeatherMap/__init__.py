@@ -29,8 +29,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if client.error:
 			ui.message("{0} {1}".format(client.statusCode, client.errorReason))
 		else:
-			temperature = client.forecast.getTemperature()
-			ui.message("Temperatature: " + str(temperature))
+			forecast = client.forecast
+			ui.message(forecast.getMessage())
 
 	__gestures={
 		"kb:NVDA+w": "announceOWMForecast",

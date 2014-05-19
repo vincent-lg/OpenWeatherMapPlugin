@@ -1,3 +1,5 @@
+# -*-coding:Utf-8 -*
+
 """Module containing the tinyowm.Forecast class.
 
 @author: Vincent Le Goff <vincent.legoff.srs@gmail.com>
@@ -6,6 +8,7 @@
 
 """
 
+from datetime import datetime
 import json
 
 from tinyowm.temperature import Temperature
@@ -33,6 +36,28 @@ class Forecast:
 		forecast = cls(data)
 		return forecast
 
+	def getCityName(self):
+		"""Return the city name."""
+		return self.data.get("name")
+
+	def getLastUpdated(self):
+		"""Return the datetime.datetime of the last updated time (dt)."""
+		dt = self.data.get("dt")
+		if dt:
+			return datetime.fromtimestamp(dt)
+
+		return None
+
+	def getCloudiness(self):
+		"""Return the cloudiness in percent."""
+		clouds = self.data.get("clouds")
+		if clouds:
+			cloudiness = clouds.get("all")
+			if cloudiness is not None:
+				return cloudiness
+
+		return None
+
 	def getTemperature(self):
 		"""Get the temperature.
 
@@ -47,3 +72,20 @@ class Forecast:
 				return Temperature(temp)
 
 		return None
+
+	def getMainWeather(self):
+		"""Return the first weather."""
+		weather = self.data.get("weather")
+		if weather:
+			weather = weather[0]
+			return weather.get("description")
+
+		return None
+
+	def getMessage(self):
+		"""Return the message (temporary method)."""
+		msg = u"{cityName}, {weather}, {temperature}°C, " \
+				u"cloudiness={cloudiness}%".format(cityName=self.getCityName(),
+				weather=self.getMainWeather(), temperature=self.getTemperature().celsius,
+				cloudiness=self.getCloudiness())
+		return msg
