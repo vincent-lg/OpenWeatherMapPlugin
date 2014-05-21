@@ -1,3 +1,5 @@
+# -*-coding:Utf-8 -*
+
 """Package to connect and handle responses from the OpenWeatherMap API.
 
 @author: Vincent Le Goff <vincent.legoff.srs@gmail.com>

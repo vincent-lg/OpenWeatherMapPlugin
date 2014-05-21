@@ -1,3 +1,5 @@
+# -*-coding:Utf-8 -*
+
 """Module containing the tinyowm.Client class.
 
 @author: Vincent Le Goff <vincent.legoff.srs@gmail.com>
@@ -10,6 +12,7 @@ import urllib
 import urllib2
 
 from tinyowm.forecast import Forecast
+from tinyowm.url import *
 
 class Client:
 
@@ -58,3 +61,9 @@ class Client:
 			client.forecast = Forecast.buildFromJSON(content)
 
 		return client
+
+	@classmethod
+	def queryWeather(cls , cityName):
+		"""Query the URL_FORECAST for a city."""
+		url = URL_WEATHER
+		return cls.query(url, {"q": cityName})

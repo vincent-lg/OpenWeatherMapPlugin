@@ -85,7 +85,7 @@ class Forecast:
 	def getMessage(self):
 		"""Return the message (temporary method)."""
 		msg = u"{cityName}, {weather}, {temperature}°C, " \
-				u"cloudiness={cloudiness}%".format(cityName=self.getCityName(),
-				weather=self.getMainWeather(), temperature=self.getTemperature().celsius,
-				cloudiness=self.getCloudiness())
-		return msg
+				u"cloudiness={cloudiness}%, last updated {lastUpdated}"
+		return msg.format(cityName=self.getCityName(), weather=self.getMainWeather(),
+		temperature=self.getTemperature().celsius, cloudiness=self.getCloudiness(),
+		lastUpdated=self.getLastUpdated())
