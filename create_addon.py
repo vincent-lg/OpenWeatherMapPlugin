@@ -22,7 +22,11 @@ def recursiveWrite(archive, path):
 
 	for subpath in os.listdir(path):
 		subpath = "/".join((path, subpath))
-		if not subpath.endswith(".pyc"):
+		if subpath.endswith(".pyc"):
+			continue
+		elif subpath.endswith("/tests"):
+			continue
+		else:
 			recursiveWrite(archive, subpath)
 
 with ZipFile('OpenWeatherMapPlugin.nvda-addon', 'w') as archive:
