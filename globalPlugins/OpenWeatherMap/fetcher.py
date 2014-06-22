@@ -26,6 +26,7 @@ class Fetcher(threading.Thread):
 
 	def __init__(self):
 		threading.Thread.__init__(self)
+		self.valid = True
 		self.client = None
 
 	def run(self):
@@ -35,7 +36,7 @@ class Fetcher(threading.Thread):
 		waits after the answer has been received.
 
 		"""
-		while True:
+		while self.valid:
 			self.query_API()
 			time.sleep(900)
 
