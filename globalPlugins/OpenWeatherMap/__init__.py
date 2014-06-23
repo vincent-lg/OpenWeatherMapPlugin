@@ -8,6 +8,7 @@
 
 """
 
+import config
 import os
 import sys
 import wx
@@ -24,18 +25,33 @@ sys.path.append(PLUGIN_DIR)
 
 from interface.locationDialog import LocationDialog
 from fetcher import Fetcher
+from locationList import locationList
 from pluginConfig import configFile
 from tinyowm import Client
 
 del sys.path[-1]
 
+# Configuration de la configuration
+locationList.path = os.path.join(config.getUserDefaultConfigPath(),
+		"owm", "locations.csv")
+
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
+
+		# Creating the configuration directory
+		configDir = os.path.join(config.getUserDefaultConfigPath(),
+				"owm")
+		if not os.path.exists(configDir):
+			os.mkdir(configDir)
+
+		# Add the settings in the NVDA menu
 		self.prefsMenu = gui.mainFrame.sysTrayIcon.menu.GetMenuItems()[0].GetSubMenu()
 		self.owmSettingsItem = self.prefsMenu.Append(wx.ID_ANY, "OWM Settings...", "Set OWM location")
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onOWMSettings, self.owmSettingsItem)
+
+		# Create the client to retrieve information from the API
 		self.fetcher = Fetcher()
 		self.fetcher.start()
 
@@ -57,13 +73,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			log.info(message)
 
 	def onOWMSettings(self, event):
-		# Pop a dialog with available OCR languages to set
-		dialog = LocationDialog(gui.mainFrame, -1, "Select OWM Location")
+		"""Pop a dialog with OWM settings."""
+		locations = locationList.retrieve()
+		selected = configFile['location']
+		locationName = locationList.get(selected).name
+		locationValues = {}
+		for location in locations:
+			locationValues[location.id] = (location.name, location.country)
+
+		dialog = LocationDialog(gui.mainFrame, -1, "Select OWM Location",
+				locationValues, locationName)
 		gui.mainFrame.prePopup()
 		ret = dialog.ShowModal()
 		gui.mainFrame.postPopup()
 		if ret == wx.ID_OK:
-			log.info("Focused {0}".format(dialog.location.focusedLocationName))
+			log.info("Focused {0}, {1}".format(locationList.path,
+					dialog.location.focusedLocationName))
 
 	__gestures={
 			"kb:NVDA+w": "announceOWMForecast",

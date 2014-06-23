@@ -37,7 +37,7 @@ class ConfigFile:
 	"""
 
 	def __init__(self):
-		path = os.path.join(config.getUserDefaultConfigPath(), "owm.ini")
+		path = os.path.join(config.getUserDefaultConfigPath(), "owm", "owm.ini")
 		self.config = configobj.ConfigObj(path, configspec=CONFIGSPEC)
 		val = validate.Validator()
 		self.config.validate(val)
